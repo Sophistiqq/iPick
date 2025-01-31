@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">iPick</string>
+    <string name="title_activity_main">iPick</string>
+    <string name="package_name">com.ipick.app</string>
+    <string name="custom_url_scheme">com.ipick.app</string>
+</resources>
