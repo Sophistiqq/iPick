@@ -1,13 +1,14 @@
 <script lang="ts">
   import Router, { link } from "svelte-spa-router";
   import { App } from "@capacitor/app";
-  import Home from "./pages/Home.svelte";
-  import About from "./pages/About.svelte";
+  import Register from "./pages/Register.svelte";
+  import Login from "./pages/Login.svelte";
   import { onMount } from "svelte";
   const routes = {
-    "/": Home,
-    "/about": About,
+    "/": Login,
+    "/register": Register,
   };
+
   onMount(() => {
     App.addListener("backButton", ({ canGoBack }) => {
       if (canGoBack) {
@@ -19,9 +20,5 @@
   });
 </script>
 
-<nav>
-  <a href="/" use:link>Home</a>
-  <a href="/about" use:link>About</a>
-</nav>
-
 <Router {routes} />
+

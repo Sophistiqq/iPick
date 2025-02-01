@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tsconfig/svelte": "^5.0.4",
+    "sass-embedded": "^1.83.4",
     "svelte": "^5.15.0",
     "svelte-check": "^4.1.1",
     "typescript": "~5.6.2",
@@ -22,6 +23,11 @@
     "@capacitor/app": "^7.0.0",
     "@capacitor/cli": "^7.0.1",
     "@capacitor/core": "^7.0.1",
+    "@fontsource/archivo-black": "^5.1.1",
+    "@fontsource/bebas-neue": "^5.1.1",
+    "@fontsource/montserrat": "^5.1.1",
+    "@fontsource/outfit": "^5.1.1",
+    "lucide-svelte": "^0.474.0",
     "svelte-spa-router": "^4.0.1"
   }
 }
