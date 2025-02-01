@@ -2,15 +2,16 @@
   import { link } from "svelte-spa-router";
   import { CircleUserRound, Eye, EyeOff, LockKeyhole } from "lucide-svelte";
   import { fly } from "svelte/transition";
-
+  import { login } from "../lib/auth"
   let username = $state("");
   let password = $state("");
   let show_password = $state(false);
   const handleSubmit = (e: Event) => {
     e.preventDefault();
+    login(username, password)
     console.log({ username, password });
   };
-  function showPassword() {
+  function togglePasswordVisibility() {
     const passwordInput = document.getElementById(
       "password",
     ) as HTMLInputElement;
@@ -47,13 +48,14 @@
         placeholder="Enter your password"
       />
       {#if show_password}
-        <Eye size="20" onclick={() => showPassword()} />
+        <Eye size="20" onclick={() => togglePasswordVisibility()} />
       {:else}
-        <EyeOff size="20" onclick={() => showPassword()} />
+        <EyeOff size="20" onclick={() => togglePasswordVisibility()} />
       {/if}
     </div>
-    <a href="/forgot-password" id="forgot-password" use:link>Forgot Password?</a
-    >
+    <a href="/forgot-password" id="forgot-password" use:link>
+      Forgot Password?
+    </a>
     <button id="submit" type="submit">Login</button>
     <div class="register-link">
       <p>or</p>
