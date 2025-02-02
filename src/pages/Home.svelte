@@ -1,13 +1,12 @@
 <script lang="ts">
   import { Geolocation } from "@capacitor/geolocation";
-  import { logout } from "../lib/auth";
   import Nav from "../components/Nav.svelte";
   import "leaflet/dist/leaflet.css";
   import L from "leaflet";
   import { onMount } from "svelte";
   import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
   import "leaflet-geosearch/dist/geosearch.css";
-
+  import { fly } from "svelte/transition";
   let map: any;
   let pickupMarker: any;
   let dropoffMarker: any;
@@ -153,6 +152,11 @@
   }
 
   async function getCurrentLocation() {
+    const status = await Geolocation.checkPermissions();
+    if (status.location !== "granted") {
+      await Geolocation.requestPermissions();
+    }
+
     const position = await Geolocation.getCurrentPosition();
 
     const { latitude, longitude } = position.coords;
@@ -323,7 +327,6 @@
       <p>Getting your location...</p>
     </div>
   {/if}
-  <Nav />
 </div>
 
 <style>
@@ -331,7 +334,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh;
+    height: 92.5vh;
     background-color: #f5f6fa;
   }
 

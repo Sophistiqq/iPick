@@ -2,6 +2,13 @@
   import { logout } from "../lib/auth";
 </script>
 
-<h1>Settings?</h1>
+<div class="container">
+  <h1>Settings</h1>
+  <button on:click={logout}>Logout</button>
+</div>
 
-<button on:click={logout}>Logout</button>
+<style lang="scss">
+  .container {
+    height: 92.5vh;
+  }
+</style>

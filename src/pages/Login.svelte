@@ -1,16 +1,22 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import { CircleUserRound, Eye, EyeOff, LockKeyhole } from "lucide-svelte";
-  import { fly } from "svelte/transition";
-  import { login } from "../lib/auth"
+  import { login } from "../lib/auth";
+  import { onMount } from "svelte";
   let username = $state("");
   let password = $state("");
   let show_password = $state(false);
   const handleSubmit = (e: Event) => {
     e.preventDefault();
-    login(username, password)
+    login(username, password);
     console.log({ username, password });
   };
+
+  onMount(() => {
+    // set timeout to prevent the page from flickering
+    setTimeout(() => {}, 1000);
+  });
+
   function togglePasswordVisibility() {
     const passwordInput = document.getElementById(
       "password",
@@ -20,7 +26,7 @@
   }
 </script>
 
-<div class="container" transition:fly>
+<div class="container">
   <h1>iPick</h1>
   <form class="login-form" onsubmit={handleSubmit}>
     <h3>Welcome</h3>

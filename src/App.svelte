@@ -11,7 +11,8 @@
   import { location } from "svelte-spa-router";
   import { checkAuth, authStore } from "./lib/auth";
   import { Loader } from "lucide-svelte";
-  import { fade, fly } from "svelte/transition";
+  import { fly } from "svelte/transition";
+  import Nav from "./components/Nav.svelte";
 
   const routes = {
     "/": Login,
@@ -51,11 +52,12 @@
 </script>
 
 {#if !$authStore.isInitialized}
-  <div class="loading-container" transition:fly={{ duration: 1000 }}>
+  <div class="loading-container">
     <Loader size={40} />
   </div>
 {:else}
   <Router {routes} />
+  <Nav />
 {/if}
 
 <style>
