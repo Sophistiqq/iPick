@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Geolocation } from "@capacitor/geolocation";
   import { logout } from "../lib/auth";
+  import Nav from "../components/Nav.svelte";
   import "leaflet/dist/leaflet.css";
   import L from "leaflet";
   import { onMount } from "svelte";
@@ -75,6 +76,8 @@
     });
 
   onMount(() => {
+    // Ask to enable location services if not already enabled
+
     map = L.map("map", {
       center: [14.5995, 120.9842],
       zoom: 13,
@@ -86,8 +89,6 @@
       {
         minZoom: 0,
         maxZoom: 20,
-        attribution:
-          '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         ext: "png",
       },
     ).addTo(map);
@@ -152,16 +153,12 @@
   }
 
   async function getCurrentLocation() {
-    isLoading = true;
     const position = await Geolocation.getCurrentPosition();
-    isLoading = false;
 
     const { latitude, longitude } = position.coords;
     const address = await getAddressFromCoords(latitude, longitude);
 
-    currentLocationMarker = L.marker([latitude, longitude], {
-      icon: customIcon("#27ae60"),
-    }).addTo(map);
+    currentLocationMarker = L.marker([latitude, longitude], {}).addTo(map);
 
     map.setView([latitude, longitude], 15);
     pickupLocation = { coords: { lat: latitude, lng: longitude }, address };
@@ -258,11 +255,12 @@
 
     {#if step === "pickup"}
       <div class="step-content">
+        <p>Pickup Location</p>
         <div class="location-input">
           <span class="location-dot pickup"></span>
           <input
             type="text"
-            placeholder="Pickup Location"
+            placeholder="Select Location on the map"
             value={pickupLocation.address}
             readonly
           />
@@ -288,6 +286,7 @@
       </div>
     {:else}
       <div class="step-content">
+        <p>Dropoff Location</p>
         <div class="location-summary">
           <div class="location-input">
             <span class="location-dot pickup"></span>
@@ -324,12 +323,14 @@
       <p>Getting your location...</p>
     </div>
   {/if}
+  <Nav />
 </div>
 
 <style>
   .container {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     height: 100vh;
     background-color: #f5f6fa;
   }
@@ -339,18 +340,19 @@
     padding: 1rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    flex: 1;
   }
 
   h2 {
-    margin: 0 0 1.5rem 0;
+    margin-bottom: 0.5rem;
     color: #2d3436;
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .progress-bar {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   .progress-step {
@@ -361,7 +363,7 @@
   }
 
   .progress-step.active {
-    background-color: var(--primary);
+    background-color: var(--accent);
   }
 
   .location-input {
@@ -372,13 +374,13 @@
     background: #f8f9fa;
     border-radius: 6px;
     border: 1px solid #e9ecef;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .location-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     aspect-ratio: 1/1;
     border-radius: 50%;
   }
@@ -414,7 +416,7 @@
   }
 
   button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     border-radius: 6px;
     border: none;
     font-weight: 600;
@@ -456,9 +458,8 @@
   }
 
   #map {
-    flex: 1;
     width: 100%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    height: 70vh;
   }
 
   .loading-overlay {
@@ -473,6 +474,13 @@
     align-items: center;
     flex-direction: column;
     z-index: 1000;
+  }
+  .step-content {
+    p {
+      font-size: 0.8rem;
+      color: #636e72;
+      margin-bottom: 0.5rem;
+    }
   }
 
   .loading-spinner {
