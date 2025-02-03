@@ -11,7 +11,6 @@
   import { location } from "svelte-spa-router";
   import { checkAuth, authStore } from "./lib/auth";
   import { Loader } from "lucide-svelte";
-  import { fly } from "svelte/transition";
   import Nav from "./components/Nav.svelte";
 
   const routes = {
@@ -46,7 +45,6 @@
         App.exitApp();
       }
     });
-
     await checkAuth(true);
   });
 </script>
@@ -57,7 +55,9 @@
   </div>
 {:else}
   <Router {routes} />
-  <Nav />
+  {#if $authStore.isAuthenticated}
+    <Nav />
+  {/if}
 {/if}
 
 <style>

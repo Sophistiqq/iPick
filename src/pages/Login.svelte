@@ -6,11 +6,12 @@
   let username = $state("");
   let password = $state("");
   let show_password = $state(false);
-  const handleSubmit = (e: Event) => {
+
+  async function handleSubmit(e: Event) {
     e.preventDefault();
-    login(username, password);
-    console.log({ username, password });
-  };
+    const user = await login(username, password);
+    console.log(user);
+  }
 
   onMount(() => {
     // set timeout to prevent the page from flickering

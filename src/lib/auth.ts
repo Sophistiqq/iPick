@@ -13,8 +13,8 @@ type AuthState = {
   isInitialized: boolean;
 };
 
-const serverUrl = "http://10.0.23.245:3000";
-const tokenKey = "auth_token";
+const serverUrl = "http://192.168.1.31:3000";
+const tokenKey = "secret";
 
 // Single auth store
 export const authStore = writable<AuthState>({
@@ -36,10 +36,10 @@ const TokenManager = {
   }
 };
 
-// Update checkAuth function to properly handle initialization
+// Update checkAuth to handle session invalidation
 export async function checkAuth(shouldRedirect = true): Promise<boolean> {
   const token = TokenManager.get();
-  
+
   if (!token) {
     authStore.set({
       user: null,
@@ -69,6 +69,17 @@ export async function checkAuth(shouldRedirect = true): Promise<boolean> {
       }
       return true;
     } else {
+      const data = await response.json();
+      // Handle session expired/invalid specifically
+      if (data.error === "Session expired or invalid") {
+        TokenManager.remove();
+        authStore.set({
+          user: null,
+          isAuthenticated: false,
+          isInitialized: true
+        });
+        // Maybe show a message to the user that they were logged out
+      }
       throw new Error('Invalid token');
     }
   } catch (error) {
@@ -85,7 +96,7 @@ export async function checkAuth(shouldRedirect = true): Promise<boolean> {
   }
 }
 
-// Update login function
+// Add new error handling in login function
 export async function login(username: string, password: string): Promise<User | null> {
   try {
     const response = await fetch(`${serverUrl}/login`, {
@@ -104,12 +115,18 @@ export async function login(username: string, password: string): Promise<User | 
         isInitialized: true
       });
       push('/home');
-      return data.user;
+      return data;
     } else {
+      // Handle specific error for multiple logins
+      if (data.error === "Already logged in on another device") {
+        // You might want to show this in your UI
+        throw new Error("You are already logged in on another device");
+      }
       throw new Error(data.error || 'Login failed');
     }
   } catch (error) {
     console.error('Login error:', error);
+    // You might want to show this error in your UI
     return null;
   }
 }
@@ -117,7 +134,10 @@ export async function login(username: string, password: string): Promise<User | 
 // Update logout function
 export async function logout(): Promise<void> {
   try {
-    await apiClient.fetch('/logout', { method: 'POST' });
+    await fetch(`${serverUrl}/logout`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${TokenManager.get()}` },
+    });
   } catch (error) {
     console.error('Logout error:', error);
   } finally {
@@ -130,13 +150,13 @@ export async function logout(): Promise<void> {
     push('/');
   }
 }
-
-export async function register(username: string, password: string): Promise<User | null> {
+// Registration function should have username, fullname, password, email, mobile_number
+export async function register(username: string, password: string, fullname: string, mobile_number: string, email: string): Promise<User | null> {
   try {
     const response = await fetch(`${serverUrl}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, fullname, mobile_number, email }),
     });
 
     const data = await response.json();

@@ -26,7 +26,7 @@
       alert("Passwords do not match");
       return;
     }
-    register({ username, email, password, mobile_number, fullname });
+    register(username, password, fullname, mobile_number, email);
   };
 
   function togglePasswordVisibility(field: "password" | "confirmPassword") {
@@ -248,4 +248,3 @@
     }
   }
 </style>
-
