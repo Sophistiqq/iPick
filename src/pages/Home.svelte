@@ -162,7 +162,9 @@
     const { latitude, longitude } = position.coords;
     const address = await getAddressFromCoords(latitude, longitude);
 
-    currentLocationMarker = L.marker([latitude, longitude], {}).addTo(map);
+    currentLocationMarker = L.marker([latitude, longitude], {
+      icon: customIcon("#219ebc"),
+    }).addTo(map);
 
     map.setView([latitude, longitude], 15);
     pickupLocation = { coords: { lat: latitude, lng: longitude }, address };

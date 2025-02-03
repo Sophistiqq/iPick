@@ -13,7 +13,7 @@ type AuthState = {
   isInitialized: boolean;
 };
 
-const serverUrl = "http://192.168.1.31:3000";
+const serverUrl = "https://elysiajs-hello-world-thhc.onrender.com";
 const tokenKey = "secret";
 
 // Single auth store

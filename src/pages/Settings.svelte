@@ -4,6 +4,7 @@
 
 <div class="container">
   <h1>Settings</h1>
+  <h1>Nyek</h1>
   <button on:click={logout}>Logout</button>
 </div>
 
